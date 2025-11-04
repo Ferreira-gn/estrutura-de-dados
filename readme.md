@@ -15,6 +15,7 @@ As implementações estão organizadas por tópicos, utilizando principalmente a
 📌 [Atividade de listas duplamente encadeadas -  Inserção ordenada de elementos](InsercaoOrdenada/)   
 📌 [Atividade de listas circulares -  Jogo de Eliminação (Josephus) ](JogoDeEliminacao/)   
 📌 [Atividade de escrita de código -  Clean Code](CleanCode/)   
+📌 [Atividade de pilha -  trapped mouse com o uso de backtracking e pilhas](Maze/)   
 
 
 <br>
