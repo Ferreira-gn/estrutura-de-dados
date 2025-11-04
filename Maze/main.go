@@ -10,38 +10,15 @@ import (
 )
 
 func main() {
-	maze := readMaze()
-	printMaze(maze)
-	solvedMaze(maze)
-	printMaze(maze)
-}
+	mazes := readAllMazes()
 
-func readMaze() [][]rune {
-	file, err := os.Open("maze.txt")
-
-	if err != nil {
-		fmt.Printf("Erro ao abrir arquivo de mapeamento do labirinto : %v", err)
-		return nil
+	for index, currentMaze := range mazes {
+		fmt.Printf("\nLabirinto %d : \n\n", index + 1)
+		printMaze(currentMaze)
+		solvedMaze(currentMaze)
+		printMaze(currentMaze)
 	}
 
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var maze [][]rune
-
-	for scanner.Scan() {
-		// Escaneia a linha atual do arquivo e converte em um array de strings contendo cada caractere da linha.
-		line := strings.TrimSpace(scanner.Text())
-
-		if line == "" {
-			break
-		}
-
-		maze = append(maze, []rune(line))
-	}
-
-	return maze
 }
 
 func printMaze(maze [][]rune) {
@@ -79,17 +56,17 @@ func solvedMaze(maze [][]rune) {
 
 	pathTraveled := stack.NewStack(*start)
 	moves := []stack.Position{
-		{X: -1, Y: 0}, // cima
-		{X: 1, Y: 0},  // baixo
-		{X: 0, Y: -1}, // esquerda
 		{X: 0, Y: 1},  // direita
+		{X: 0, Y: -1}, // esquerda
+		{X: 1, Y: 0},  // baixo
+		{X: -1, Y: 0}, // cima
 	}
 
 	for pathTraveled.Len() > 0 {
 		currentPosition := pathTraveled.ViewTheTop()
 
 		if currentPosition.X == exit.X && currentPosition.Y == exit.Y {
-			fmt.Printf("Saída do labirinto encontrada\n")
+			fmt.Printf("\n\nSaída do labirinto encontrada\n\n")
 			maze[currentPosition.X][currentPosition.Y] = '.'
 			return
 		}
@@ -103,7 +80,7 @@ func solvedMaze(maze [][]rune) {
 
 			if isValidMove(maze, newDimenssionX, newDimenssionY) {
 				pathTraveled.Append(newDimenssionX, newDimenssionY)
-				maze[currentPosition.X][currentPosition.Y] = '.'
+				maze[newDimenssionX][newDimenssionY] = '.'
 				found = true
 				break
 			}
@@ -137,11 +114,78 @@ func findCharacter(maze [][]rune, findValue rune) *stack.Position {
 
 func isValidMove(maze [][]rune, x, y int) bool {
 	linesSize := len(maze)
-	columnsSize := len(maze[0])
+	columnsSize := len(maze[x])
 
 	if x < 0 || y < 0 || x >= linesSize || y >= columnsSize {
 		return false
 	}
 
 	return maze[x][y] == 'e' || maze[x][y] == '0'
+}
+
+// Retorna um array de "labirintos" / um array de matrizes
+func readAllMazes() [][][]rune {
+	file, err := os.Open("maze.txt")
+
+	if err != nil {
+		fmt.Printf("Erro ao abrir arquivo de mapeamento do labirinto : %v", err)
+		return nil
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var mazes [][][]rune
+	var currentMaze [][]rune
+
+	for scanner.Scan() {
+		// Escaneia a linha atual do arquivo e converte em um array de strings contendo cada caractere da linha.
+		line := strings.TrimSpace(scanner.Text())
+
+		if line == "" {
+			if len(currentMaze) > 0 {
+				mazes = append(mazes, currentMaze)
+				currentMaze = [][]rune{}
+			}
+
+			continue
+		}
+
+		currentMaze = append(currentMaze, []rune(line))
+	}
+
+	if len(currentMaze) > 0 {
+		mazes = append(mazes, currentMaze)
+	}
+
+	return mazes
+}
+
+func readMaze() [][]rune {
+	file, err := os.Open("maze.txt")
+
+	if err != nil {
+		fmt.Printf("Erro ao abrir arquivo de mapeamento do labirinto : %v", err)
+		return nil
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var maze [][]rune
+
+	for scanner.Scan() {
+		// Escaneia a linha atual do arquivo e converte em um array de strings contendo cada caractere da linha.
+		line := strings.TrimSpace(scanner.Text())
+
+		if line == "" {
+			break
+		}
+
+		maze = append(maze, []rune(line))
+	}
+
+	return maze
 }
