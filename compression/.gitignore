@@ -1,1 +1,2 @@
-./data/compression/
+data/compressed/*.bin
+data/decompressed/*.txt
