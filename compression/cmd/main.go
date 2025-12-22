@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	file, err := os.Open("./data/dna.txt")
 
 	if err != nil {
