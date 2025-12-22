@@ -11,31 +11,44 @@ comparando o arquivo original e sua versão comprimida, informando os seus taman
 e se houve um ganho significativo na economia do armazenamento.
 */
 func CompressionStatus(originalFileName string, compressedFileName string) {
-	originalFile, errOnOpenOriginalFile := os.Stat(originalFileName)
-	compressedFile, errOnOpenCompressedFile := os.Stat(compressedFileName)
+	originalFile, errOriginal := os.Stat(originalFileName)
+	compressedFile, errCompressed := os.Stat(compressedFileName)
 
-	if errOnOpenCompressedFile != nil || errOnOpenOriginalFile != nil {
-		fmt.Printf("Erro ao abrir arquivos de textos para a verificação de status da compressão")
+	if errOriginal != nil || errCompressed != nil {
+		fmt.Println("Erro ao abrir arquivos para verificação de status da compressão.")
 		return
 	}
 
-	originalFileSize := FileSizeFormatter(originalFile.Size())
-	compressedFileSize := FileSizeFormatter(compressedFile.Size())
+	originalSize := originalFile.Size()
+	compressedSize := compressedFile.Size()
 
-	fmt.Printf("\n\n\033[1;33mVerificação dos status da manutenção\033[0m\n\n")
+	if originalSize == 0 {
+		fmt.Println("Arquivo original vazio. Não é possível calcular economia.")
+		return
+	}
 
+	originalFormatted := FileSizeFormatter(originalSize)
+	compressedFormatted := FileSizeFormatter(compressedSize)
+
+	fmt.Printf("\n\n\033[1;33mVerificação dos status da compressão\033[0m\n\n")
 	fmt.Printf("Nome %31s Tamanho\n\n", "")
-	fmt.Printf("%s %27s\n", "Arquivo original", originalFileSize)
-	fmt.Printf("%s %25s\n", "Arquivo compactado", compressedFileSize)
+	fmt.Printf("%-30s %10s\n", "Arquivo original", originalFormatted)
+	fmt.Printf("%-30s %10s\n", "Arquivo compactado", compressedFormatted)
 
-	economy := (compressedFile.Size() / originalFile.Size()) * 100
+	ratio := float64(compressedSize) / float64(originalSize)
+	economy := (1 - ratio) * 100
 
-	fmt.Printf("\033[1m\n\nResultado :\n\033[0m")
+	fmt.Printf("\033[1m\n\nResultado:\n\033[0m")
 
-	if economy <= 0 {
-		fmt.Printf("\033[31mNenhum ganho significativo na econômia de espaço.\033[0m\n\n")
-		return
+	switch {
+	case economy > 0:
+		fmt.Printf("\033[32mEconomia de %.2f%% no armazenamento.\033[0m\n\n", economy)
+	case economy == 0:
+		fmt.Printf("\033[33mNenhuma economia de espaço obtida.\033[0m\n\n")
+	default:
+		fmt.Printf(
+			"\033[31mArquivo compactado é %.2f%% maior que o original.\033[0m\n\n",
+			-economy,
+		)
 	}
-
-	fmt.Printf("\n\033[32mEconomia de %d%s", economy, "% porcentos\033[0m\n\n")
 }
