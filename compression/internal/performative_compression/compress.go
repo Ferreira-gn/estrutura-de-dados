@@ -6,7 +6,7 @@ import (
 	"github.com/Dom-Garotom/estruturaDeDados/compression/pkg"
 )
 
-func Compress(path string) {
+func Compress(path string , outputPath string) {
 	dna, erroOnReadDNAFile := pkg.ReadTextFiles(path)
 
 	if erroOnReadDNAFile != nil {
@@ -23,7 +23,7 @@ func Compress(path string) {
 	}
 
 	// salva o buffer com os dados em binário em um arquivo binário
-	createdFile, _, err := pkg.CreateFile("../data/compressed/dna-performatic-compact", pkg.BINARY)
+	createdFile, _, err := pkg.CreateFile(outputPath, pkg.BINARY)
 
 	if err != nil {
 		return

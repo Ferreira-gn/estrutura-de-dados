@@ -32,15 +32,15 @@ func main() {
 	}
 
 	trivialcompact.Decompress(compressedFile)
-	
 
 	fmt.Printf("\n\n\033[1;34mBenchMark do modelo de compressão trivial    \n\n\033[0m ")
 	pkg.CompressionStatus("../data/dna.txt", "../data/compressed/dna-compact.bin")
 	pkg.DiffChecker("../data/dna.txt", "../data/decompressed/dna-decompressed.txt")
-	
-	
-	performativecompression.Compress("../data/dna.txt")
-	
+
+	performativecompression.Compress("../data/dna.txt", "../data/compressed/dna-performatic-compact")
+	performativecompression.Decompress("../data/compressed/dna-performatic-compact.bin")
+
 	fmt.Printf("\n\n\033[1;34mBenchMark do modelo de compressão performatico    \n\n\033[0m ")
 	pkg.CompressionStatus("../data/dna.txt", "../data/compressed/dna-performatic-compact.bin")
+	pkg.DiffChecker("../data/dna.txt", "../data/decompressed/dna-performatic-decompressed.txt")
 }
