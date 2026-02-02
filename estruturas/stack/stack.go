@@ -1,50 +1,57 @@
-package stack
+package structures_stack
 
-type Node struct {
-	value int
-	next  *Node
-}
+import (
+	"github.com/ferreira-gn/estrutura-de-dados/estruturas/structures"
+)
 
-type Stack struct {
-	head *Node
+type Stack[T any] struct {
+	head *structures.Node[T]
 	size int
 }
 
-func StackConstructor() *Stack {
-	return &Stack{nil, 0}
+func New[T any]() *Stack[T] {
+	return &Stack[T]{
+		head: nil,
+		size: 0,
+	}
 }
 
-func (s *Stack) Push(value int) {
-	newNode := Node{value, nil}
-
-	if s.head == nil {
-		s.head = &newNode
-		s.size++
-		return
+func (stack *Stack[T]) Push(value T) {
+	newNode := &structures.Node[T]{
+		Value: value,
+		Next:  stack.head,
 	}
 
-	newNode.next = s.head
-	s.head = &newNode
-	s.size++
+	stack.head = newNode
+	stack.size++
 }
 
-func (s *Stack) Pop() {
-	if s.head == nil {
-		return
+func (stack *Stack[T]) Pop() T {
+	if stack.head == nil {
+		var emptyValue T
+		return emptyValue
 	}
 
-	s.head = s.head.next
-	s.size--
+	returnedValue := stack.head.Value
+	stack.head = stack.head.Next
+	stack.size--
+
+	return returnedValue
 }
 
-func (s *Stack) ViewTheTop() int {
-	if s.head == nil {
-		return 0
+func (stack *Stack[T]) Peek() T {
+	if stack.head == nil {
+		var emptyValue T
+		return emptyValue
 	}
 
-	return s.head.value
+	return stack.head.Value
 }
 
-func (s *Stack) Len() int {
-	return s.size
+func (stack *Stack[T]) Len() int {
+	return stack.size
+}
+
+func (stack *Stack[T]) IsEmpty() bool {
+	return stack.size == 0
 }
