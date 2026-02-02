@@ -1,3 +1,3 @@
-module github.com/ferreira-gn/estrutura-de-dados/estrutura/stack
+module github.com/ferreira-gn/estrutura-de-dados/estruturas
 
 go 1.25.5

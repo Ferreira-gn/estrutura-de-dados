@@ -3,7 +3,7 @@ package stack_test
 import (
 	"testing"
 
-	"github.com/ferreira-gn/estrutura-de-dados/estrutura/stack/stack"
+	"github.com/ferreira-gn/estrutura-de-dados/estruturas/stack"
 )
 
 func TestFromCreateNewStack(t *testing.T) {
